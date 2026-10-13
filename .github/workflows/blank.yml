@@ -1,0 +1,40 @@
+name: College Two-Job Task
+
+# Triggers the workflow on push or pull request to the main branch
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # --- FIRST JOB ---
+  build:
+    name: First Job - Build and Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      - name: Set up Environment (Example)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run build or tests
+        run: |
+          echo "Running the first job tasks..."
+          echo "If this command fails, the second job will be skipped automatically."
+
+  # --- SECOND JOB ---
+  deploy:
+    name: Second Job - Dependent Task
+    needs: build  # <-- THIS IS THE KEY: Makes this job wait for and require 'build' to succeed
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      - name: Run second job task
+        run: |
+          echo "Success! The first job completed successfully, so this second job is now running."
